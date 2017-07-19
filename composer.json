@@ -10,7 +10,7 @@
         }
     ]
     , "require": {
-        "poirot/queue": "dev-master"
+        "poirot/queue": "dev-devel"
     }
    ,"autoload"  : {
         "psr-4": {
