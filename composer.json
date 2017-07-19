@@ -1,0 +1,23 @@
+{
+    "name"       : "poirot/mod-queue"
+   ,"description": "Serve as an abstract layer between your application code and the implementation of the queue."
+   ,"type"       : "library"
+   ,"authors": [
+        {
+            "name": "Payam Naderi"
+           ,"email": "naderi.payam@gmail.com"
+           ,"role": "Developer"
+        }
+    ]
+    , "require": {
+        "poirot/queue": "dev-master"
+    }
+   ,"autoload"  : {
+        "psr-4": {
+            "Module\\QueueDriver\\": "src/"
+        }
+    }
+   ,"repositories": [
+      { "type": "git" ,"url": "https://github.com/phPoirot/Module-QueueDriver.git" }
+    ]
+}
