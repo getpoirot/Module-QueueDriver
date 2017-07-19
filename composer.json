@@ -18,6 +18,9 @@
             "Module\\QueueDriver\\": "src/"
         }
     }
+  , "suggest": {
+      "poirot/mod-driver_mongo": "Driver For MongoDb."
+   }
    ,"repositories": [
       { "type": "git" ,"url": "https://github.com/phPoirot/Module-QueueDriver.git" }
     ]
