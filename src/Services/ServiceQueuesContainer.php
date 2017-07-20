@@ -52,7 +52,9 @@ class ServiceQueuesContainer
         /** @var DataEntity $config */
         $config = $config->get( \Module\QueueDriver\Module::CONF, array() );
 
-        $config = $config[self::CONF]['queues'];
+
+
+        $config = $config[self::CONF];
         return $config;
     }
 }

@@ -5,6 +5,7 @@ namespace Module\QueueDriver
 
     use Poirot\Application\Interfaces\Sapi\iSapiModule;
     use Poirot\Application\Interfaces\Sapi;
+    use Poirot\Application\ModuleManager\Interfaces\iModuleManager;
     use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
     use Poirot\Ioc\Container;
@@ -18,6 +19,7 @@ namespace Module\QueueDriver
 
     class Module implements iSapiModule
         , Sapi\Module\Feature\iFeatureModuleMergeConfig
+        , Sapi\Module\Feature\iFeatureModuleInitModuleManager
         , Sapi\Module\Feature\iFeatureModuleNestActions
         , Sapi\Module\Feature\iFeatureModuleNestServices
         , Sapi\Module\Feature\iFeatureOnPostLoadModulesGrabServices
@@ -40,6 +42,30 @@ namespace Module\QueueDriver
         function initConfig(iDataEntity $config)
         {
             return \Poirot\Config\load(__DIR__ . '/../config/mod-queue_driver');
+        }
+
+        /**
+         * Initialize Module Manager
+         *
+         * priority: 1000 C
+         *
+         * @param iModuleManager $moduleManager
+         *
+         * @return void
+         */
+        function initModuleManager(iModuleManager $moduleManager)
+        {
+            // ( ! ) ORDER IS MANDATORY
+
+            if (!$moduleManager->hasLoaded('MongoDriver'))
+                // MongoDriver Module Is Required.
+                $moduleManager->loadModule('MongoDriver');
+
+            if (!$moduleManager->hasLoaded('Authorization'))
+                // Authorization Module Is Required.
+                $moduleManager->loadModule('Authorization');
+
+
         }
 
         /**

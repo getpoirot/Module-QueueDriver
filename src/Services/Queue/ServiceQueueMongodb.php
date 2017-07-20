@@ -30,7 +30,7 @@ class ServiceQueueMongodb
     function newService()
     {
         /** @var MongoDriverAction $driver */
-        $driver = $this->services()->get('/module/mongodriver/actions/driver');
+        $driver = \Module\MongoDriver\Actions::Driver();
         $client = $driver->getClient( $this->client );
 
         $collection = $client->selectCollection($this->db, $this->collection);

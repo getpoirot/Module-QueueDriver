@@ -67,7 +67,7 @@ class FireWorkerAction
             $qAggregate->push(new BasePayload($message), 'will_failed');
         }
 
-        die('>_');
+        die;
     }
 
 

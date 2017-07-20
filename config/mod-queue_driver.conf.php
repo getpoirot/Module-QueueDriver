@@ -22,13 +22,10 @@ return [
             // It's a configuration of BuilderContainer [services=>]
             // @see BuildContainer::setServices
             'memory'  => new \Poirot\Queue\Queue\InMemoryQueue(),
-            'mongodb' => new \Poirot\Ioc\instance(
-                \Module\QueueDriver\Services\Queue\ServiceQueueMongodb::class
-                , [
-                    'db' => 'mydb', 'client' => 'master', 'collection' => 'queue.app',
-                ]
-            ),
+            'mongodb' => [
+                \Module\QueueDriver\Services\Queue\ServiceQueueMongodb::class,
+                'db' => 'mydb', 'client' => 'master', 'collection' => 'queue.app',
+            ]
         ],
-
     ],
 ];
