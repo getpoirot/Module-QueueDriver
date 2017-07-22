@@ -2,72 +2,51 @@
 namespace Module\QueueDriver\Actions\Worker;
 
 use Module\Foundation\Actions\aAction;
-use Poirot\Queue\Interfaces\iQueueDriver;
-use Poirot\Queue\Payload\BasePayload;
-use Poirot\Queue\Queue\AggregateQueue;
 use Poirot\Queue\Worker;
 
 
 class FireWorkerAction
     extends aAction
 {
-    function __invoke($worker_id = null)
+    protected $worker;
+
+
+    function __invoke($worker_name = null)
     {
+        $worker       = \Module\QueueDriver\Actions::Worker($worker_name);
+        $this->worker = $worker;
+
+
+        # Cleanup Storage From Killed Pids
+        #
+        $this->_refreshKilledPids($worker);
+
+
+        # Keep Track Worker In Storage
+        #
+        $this->_keepTrack($worker);
+
+
+
+        $self = $this;
+        register_shutdown_function(function () use ($self) {
+            $self->__destruct();
+        });
+
+
+        # Check Whether The Maximum Threads Reached?
+        #
+        if ( false === $this->_isAllowedByMaxThreads($worker) )
+            die('No More Threads Allowed.');
+
+
+
         # Send Headers To Client And Keep Running
         #
         $this->_sendHeaders();
+        $this->_run($worker);
 
-
-        $queue = \Module\QueueDriver\Services::Queues()->get('mongodb');
-
-        $this->_run($queue);
-
-
-        # Build Aggregate Queue
-        #
-        $qAggregate = new AggregateQueue([
-            'threads_high' => [ $queue, 9 ],
-            'threads'      => [ $queue, 2 ],
-            'will_failed'  => [ $queue, 2 ],
-        ]);
-
-        function will_failed($arg)
-        {
-            static $failed = [];
-            if (!isset($failed[$arg])) {
-                echo date('H:i:s').' > '.$arg.' Will Failed; and retry again.'.'<br/>';
-                $failed[$arg] = true;
-
-                throw new \Exception();
-
-            } else {
-                echo date('H:i:s').' > '.$arg.' Recovering Failed.'.'<br/>';
-            }
-
-        }
-
-        # Add To Queue
-        #
-        for ($i =1; $i<=1000; $i++) {
-            $message = [ 'ver'=>'0.1', 'fun'=> 'print_r', 'args'=> ["<h4> ($i) From High</h4>"] ];
-            $qAggregate->push(new BasePayload($message), 'threads_high');
-        }
-
-        # Add To Queue
-        #
-        for ($i =1; $i<=1000; $i++) {
-            $message = [ 'ver'=>'0.1', 'fun'=> 'print_r', 'args'=> ["<h5> ($i) Normal</h5>"] ];
-            $qAggregate->push(new BasePayload($message), 'threads');
-        }
-
-        # Add To Queue
-        #
-        for ($i =1; $i<=100; $i++) {
-            $message = [ 'ver'=>'0.1', 'fun'=> '\Module\QueueDriver\Actions\Worker\will_failed', 'args' => [ random_int(1, 100) ] ];
-            $qAggregate->push(new BasePayload($message), 'will_failed');
-        }
-
-        die('>_');
+        die;
     }
 
 
@@ -83,9 +62,7 @@ class FireWorkerAction
         header("Connection: close");
 
         ob_start();
-
         echo 'Demon Start, Process #'.getmypid();
-
         $size = ob_get_length();
         header("Content-Length: $size");
         ob_end_flush(); // Strange behaviour, will not work
@@ -96,22 +73,87 @@ class FireWorkerAction
         session_write_close();
     }
 
-    private function _run(iQueueDriver $queue)
+    private function _run(\Module\QueueDriver\Actions\Worker\Worker $worker)
     {
-        # Build Aggregate Queue
+        $worker->goWait();
+    }
+
+
+    private function _refreshKilledPids($worker)
+    {
+        /** @var Worker $worker */
+
+        $storage    = \Module\QueueDriver\Services::Storage();
+        $data       = $storage->get($worker->getWorkerName(), []);
+
+        foreach ($data as $workerId => $d) {
+            $pid = $d['pid'];
+            if (! file_exists("/proc/$pid") )
+                // Process is killed, remove from list
+                unset($data[$workerId]);
+        }
+
+        $storage->set($worker->getWorkerName(), $data);
+    }
+
+    private function _keepTrack($worker)
+    {
+        /** @var Worker $worker */
+
+        $workerName = $worker->getWorkerName();
+        $workerID   = $worker->getWorkerID();
+        $processID  =  getmypid();
+
+        $storage    = \Module\QueueDriver\Services::Storage();
+        if (! $storage->has($workerName) )
+            $storage->set($workerName, []);
+
+        $data = $storage->get($workerName);
+        $data[$workerID] = [
+            'timestamp_created' => time(),
+            'pid'               => $processID,
+        ];
+
+        $storage->set($workerName, $data);
+    }
+
+    private function _isAllowedByMaxThreads($worker)
+    {
+        /** @var Worker $worker */
+
+        $workerName = $worker->getWorkerName();
+
+        $allowedThreads = \Module\Foundation\Actions::config(
+            \Module\QueueDriver\Module::CONF
+            , 'worker', 'workers', $workerName, 'max_trades'
+        );
+
+        if ($allowedThreads === null)
+            return true;
+
+
+        # Check Currently Running Threads
         #
-        $qAggregate = new AggregateQueue([
-            'threads_high' => [ $queue, 9 ],
-            'threads'      => [ $queue, 2 ],
-            'will_failed'  => [ $queue, 2 ],
-        ]);
+        $storage    = \Module\QueueDriver\Services::Storage();
+        $data       = $storage->get($workerName, []);
 
-        register_shutdown_function(function() use ($queue, $qAggregate) {
-            $worker = new Worker('my_worker', $qAggregate, [
-                'built_in_queue' => $queue,
-            ]);
+        return ( $allowedThreads >= count($data) );
+    }
 
-            $worker->go();
-        });
+    function __destruct()
+    {
+        /** @var Worker $worker */
+        if ( null === $worker = $this->worker )
+            return;
+
+
+        $workerName = $worker->getWorkerName();
+        $workerID   = $worker->getWorkerID();
+
+        $storage    = \Module\QueueDriver\Services::Storage();
+        $data       = $storage->get($workerName);
+        unset($data[$workerID]);
+
+        $storage->set($workerName, $data);
     }
 }

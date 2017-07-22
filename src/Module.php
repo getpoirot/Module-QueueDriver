@@ -132,11 +132,22 @@ namespace Module\QueueDriver
 
 namespace Module\QueueDriver
 {
+    use Module\QueueDriver\Actions\Worker\Worker;
     use Module\QueueDriver\Services\ContainerQueuesCapped;
+    use Poirot\Storage\Interfaces\iDataStore;
+
 
     /**
      * @method static ContainerQueuesCapped Queues()
+     * @method static iDataStore            Storage()
      */
     class Services extends \IOC
+    { }
+
+
+    /**
+     * @method static Worker Worker($worker_name)
+     */
+    class Actions extends \IOC
     { }
 }

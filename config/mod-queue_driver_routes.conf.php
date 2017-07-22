@@ -23,7 +23,7 @@ return [
                         'route' => 'RouteSegment',
                         'options' => [
                             // also "validation_code" exists in params and pass through actions as argument
-                            'criteria'    => '/fire/:worker_id~\w+~',
+                            'criteria'    => '/fire/:worker_name~\w+~',
                             'match_whole' => true,
                         ],
                         'params'  => [
@@ -32,6 +32,21 @@ return [
                             ],
                         ],
                     ],
+
+                    'feed' => [
+                        'route' => 'RouteSegment',
+                        'options' => [
+                            // also "validation_code" exists in params and pass through actions as argument
+                            'criteria'    => '/feed/:worker_name~\w+~',
+                            'match_whole' => true,
+                        ],
+                        'params'  => [
+                            ListenerDispatch::ACTIONS => [
+                                '/module/queueDriver/actions/FeedWorkerAction',
+                            ],
+                        ],
+                    ],
+
                 ],
 
             ],

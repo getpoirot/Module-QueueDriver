@@ -1,0 +1,1 @@
+* * * * * root curl -u federation:secret -X GET http://localhost/q-wrk/demon/fire/default_worker >> /dev/null 2>&1
