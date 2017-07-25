@@ -95,9 +95,9 @@ class Worker
      * Run Worker
      *
      */
-    function goWait()
+    function goWait($maxExecution = null)
     {
-        $this->worker->goWait();
+        $this->worker->goWait($maxExecution);
     }
 
 
