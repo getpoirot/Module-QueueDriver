@@ -24,7 +24,8 @@ namespace Module\QueueDriver
         , Sapi\Module\Feature\iFeatureModuleNestServices
         , Sapi\Module\Feature\iFeatureOnPostLoadModulesGrabServices
     {
-        const CONF = 'mod.queue_driver';
+        const CONF  = 'mod.queue_driver';
+        const REALM_FEDERATION = 'mod.queue_driver.realm';
 
 
         /**

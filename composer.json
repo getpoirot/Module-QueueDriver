@@ -12,6 +12,7 @@
     , "require": {
         "poirot/skeleton": "dev-devel"
         ,"poirot/queue": "dev-devel"
+        ,"poirot/mod-authorization": "dev-devel"
     }
    ,"autoload"  : {
         "psr-4": {

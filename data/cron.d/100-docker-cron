@@ -1,1 +1,1 @@
-* * * * * root curl -u federation:secret -X GET http://localhost/q-wrk/demon/fire/default_worker >> /dev/null 2>&1
+* * * * * root curl -u admin:123456 -H "Accept: application/json" -X GET http://localhost:8000/q-wrk/demon/fire/default_worker
