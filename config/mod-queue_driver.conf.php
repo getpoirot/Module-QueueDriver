@@ -52,7 +52,7 @@ return [
 
     # Authenticator:
 
-    \Module\Authorization\Module::CONF_KEY => [
+    \Module\Authorization\Module::CONF => [
 
         ServiceAuthenticatorsContainer::CONF => [
             'plugins_container' => [

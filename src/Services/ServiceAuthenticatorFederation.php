@@ -29,7 +29,7 @@ class ServiceAuthenticatorFederation
     {
         $realm      = aIdentifier::DEFAULT_REALM;
 
-        $adapter    = new IdentityCredentialDigestFile;;
+        $adapter    = new IdentityCredentialDigestFile;
 
         // Affect Application Request/Response
         $request    = \IOC::GetIoC()->get('/HttpRequest');
