@@ -1,8 +1,6 @@
 <?php
 namespace Module\QueueDriver
 {
-    use Module\OAuth2\Services\BuildServices;
-
     use Poirot\Application\Interfaces\Sapi\iSapiModule;
     use Poirot\Application\Interfaces\Sapi;
     use Poirot\Application\ModuleManager\Interfaces\iModuleManager;
@@ -85,7 +83,7 @@ namespace Module\QueueDriver
         {
             $conf    = \Poirot\Config\load(__DIR__ . '/../config/mod-queue_driver_services');
 
-            $builder = new BuildServices;
+            $builder = new BuildContainer;
             $builder->with($builder::parseWith($conf));
             return $builder;
         }
