@@ -22,8 +22,9 @@ return [
                         ],
                     ],
                     'aggregate' => [
-                        // Queue Aggregator Settings
-                        'built_in_queue' => 'mongodb'
+                        // Worker Settings
+                        'built_in_queue' => 'mongodb',
+
                     ],
                 ],
             ],

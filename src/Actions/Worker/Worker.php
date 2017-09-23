@@ -14,7 +14,10 @@ class Worker
 
     function __invoke($worker_name)
     {
-        $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
+        // TODO third argument will not pass to action
+        // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
+        $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
+        $conf = $conf['workers'];
         if (! isset($conf[$worker_name]) )
             throw new \Exception(sprintf(
                 'Worker With name (%s) not found.'

@@ -1,8 +1,6 @@
 <?php
-/**
- *
- * @see \Poirot\Ioc\Container\BuildContainer
- */
+/** @see \Poirot\Ioc\Container\BuildContainer */
+
 return [
     'services' => [
         /** Access Registered Workers */

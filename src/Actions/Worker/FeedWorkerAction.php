@@ -15,11 +15,14 @@ class FeedWorkerAction
 
         # Add To Queue
         #
-        for ($i =1; $i<=1000; $i++) {
+        for ($i =1; $i<=100000; $i++) {
             $message = [ 'ver'=>'0.1', 'fun'=> 'print_r', 'args'=> ["<h4> ($i) From High</h4>"] ];
             $worker->queue()->push(new BasePayload($message), 'general');
 
-            sleep( random_int(1, 3) );
+            usleep( random_int(1, 1000) );
         }
+
+
+        die;
     }
 }

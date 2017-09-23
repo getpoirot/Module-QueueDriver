@@ -15,6 +15,22 @@ namespace Module\QueueDriver
     use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 
+    /**
+     * Services:
+     *   > Queues
+     *     define some queue plugins can accessed by name;
+     *
+     *     Module\QueueDriver::Queues()->get('memory')
+     *
+     *   > Storage
+     *     storage used by aggregate queue to pick tasks and store some
+     *     information about trades and etc.
+     *
+     * Actions:
+     *   > Worker
+     *
+     *
+     */
     class Module implements iSapiModule
         , Sapi\Module\Feature\iFeatureModuleMergeConfig
         , Sapi\Module\Feature\iFeatureModuleInitModuleManager

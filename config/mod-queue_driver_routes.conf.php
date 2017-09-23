@@ -19,6 +19,8 @@ return [
                 ],
 
                 'routes' => [
+
+                    ## GET /q-wrk/demon/fire/default_worker
                     'fireworker' => [
                         'route' => 'RouteSegment',
                         'options' => [
@@ -33,6 +35,7 @@ return [
                         ],
                     ],
 
+                    ## GET /q-wrk/demon/feed/default_worker
                     'feed' => [
                         'route' => 'RouteSegment',
                         'options' => [
