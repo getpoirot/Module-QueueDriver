@@ -51,8 +51,8 @@ return [
     ],
 
 
-    # Authenticator:
-
+    ## Authenticator:
+    #
     \Module\Authorization\Module::CONF => [
 
         ServiceAuthenticatorsContainer::CONF => [
