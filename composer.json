@@ -20,7 +20,8 @@
         }
     }
   , "suggest": {
-      "poirot/mod-driver_mongo": "Driver For MongoDb."
+      "poirot/mod-driver_mongo": "Driver For MongoDb.",
+      "predis/predis" : "Redis client for PHP"
    }
    ,"repositories": [
       { "type": "git" ,"url": "https://github.com/phPoirot/Module-QueueDriver.git" }

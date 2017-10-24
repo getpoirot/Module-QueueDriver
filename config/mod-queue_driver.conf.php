@@ -38,7 +38,12 @@ return [
             'mongodb' => [
                 \Module\QueueDriver\Services\Queue\ServiceQueueMongodb::class,
                 'db' => 'mydb', 'client' => 'master', 'collection' => 'queue.app',
-            ]
+            ],
+//            'redis'   => [
+//                \Module\QueueDriver\Services\Queue\ServiceQueueRedis::class,
+//                'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null
+//            ]
+
         ],
 
         // Storage Used By Worker(s) while running jobs ....
@@ -47,6 +52,10 @@ return [
                 \Module\QueueDriver\Services\Storage\ServiceStorageMongodb::class,
                 [ 'db' => 'mydb', 'client' => 'master', 'collection' => 'queue.app.storage', ]
             ),
+//            'instance' => new \Poirot\Ioc\instance(
+//                \Module\QueueDriver\Services\Storage\ServiceStorageRedis::class,
+//                [ 'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null ]
+//            ),
         ],
     ],
 
