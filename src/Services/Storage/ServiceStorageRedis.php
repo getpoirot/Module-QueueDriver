@@ -55,7 +55,7 @@ class ServiceStorageRedis extends aServiceContainer
      */
     function newService()
     {
-        $client = new Predis\Client([
+        $client = new \Predis\Client([
             'scheme'                => $this->scheme,
             'host'                  => $this->host,
             'port'                  => $this->port,
@@ -71,8 +71,7 @@ class ServiceStorageRedis extends aServiceContainer
             'iterable_multibulk'    => $this->iterable_multibulk,
             'throw_errors'          => $this->throw_errors
         ]);
-        $storage = new RedisStore();
-        return $storage->giveClient($client);
+        return new RedisStore('queue.app', ['client' => $client]);
     }
 
     /**

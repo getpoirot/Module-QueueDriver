@@ -55,7 +55,7 @@ class ServiceQueueRedis extends aServiceContainer
      */
     function newService()
     {
-        $client = new Predis\Client([
+        $client = new \Predis\Client([
             'scheme'                => $this->scheme,
             'host'                  => $this->host,
             'port'                  => $this->port,
