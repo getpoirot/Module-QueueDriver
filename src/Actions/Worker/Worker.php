@@ -1,4 +1,5 @@
 <?php
+
 namespace Module\QueueDriver\Actions\Worker;
 
 use Poirot\Queue\Queue\AggregateQueue;
@@ -6,6 +7,9 @@ use Poirot\Queue\Queue\AggregateQueue;
 
 class Worker
 {
+    /** @var array */
+    protected static $workers = [];
+
     /** @var \Poirot\Queue\Worker */
     protected $worker;
     /** @var AggregateQueue */
@@ -14,11 +18,15 @@ class Worker
 
     function __invoke($worker_name)
     {
-        // TODO third argument will not pass to action
-        // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
+        if (isset(static::$workers[$worker_name]))
+            return static::$workers[$worker_name];
+
+
+// TODO third argument will not pass to action
+// $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
         $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
         $conf = $conf['workers'];
-        if (! isset($conf[$worker_name]) )
+        if (!isset($conf[$worker_name]))
             throw new \Exception(sprintf(
                 'Worker With name (%s) not found.'
                 , $worker_name
@@ -27,17 +35,17 @@ class Worker
 
         $conf = $conf[$worker_name];
 
-        # Build Queue Aggregate
-        #
+# Build Queue Aggregate
+#
         $qAggregate = new AggregateQueue;
 
         /*
         'channels' => [
-            'general' => [
-                // Jobs in this queue will executed with DemonShutdown
-                'queue_name' => 'memory', // Queue defined in Service Container
-                'weight'     => 10,
-            ],
+        'general' => [
+        // Jobs in this queue will executed with DemonShutdown
+        'queue_name' => 'memory', // Queue defined in Service Container
+        'weight'     => 10,
+        ],
         ],
         */
         foreach ($conf['channels'] as $cname => $cvalue) {
@@ -45,16 +53,16 @@ class Worker
             $qAggregate->addQueue(
                 $cname
                 , $queue
-                , ( isset($cvalue['weight']) ) ? $cvalue['weight'] : null
+                , (isset($cvalue['weight'])) ? $cvalue['weight'] : null
             );
         }
 
 
-        # Attain Built-in Queue Services
-        #
-        if ( isset($conf['aggregate']) && is_array($conf['aggregate']) && isset($conf['aggregate']['built_in_queue']) ) {
+# Attain Built-in Queue Services
+#
+        if (isset($conf['aggregate']) && is_array($conf['aggregate']) && isset($conf['aggregate']['built_in_queue'])) {
             if (is_string($conf['aggregate']['built_in_queue']))
-                // Retrieve Queue From Services
+// Retrieve Queue From Services
                 $conf['aggregate']['built_in_queue'] = \Module\QueueDriver\Services::Queues()->get($conf['aggregate']['built_in_queue']);
         }
 
@@ -64,14 +72,16 @@ class Worker
 
         ]);
 
+
         $n = clone $this;
-        $n->queue  = $qAggregate;
+        $n->queue = $qAggregate;
         $n->worker = new \Poirot\Queue\Worker(
             $worker_name
             , $qAggregate
             , $settings
         );
 
+        static::$workers[$worker_name] = $n;
         return $n;
     }
 
@@ -104,7 +114,7 @@ class Worker
     }
 
 
-    // ..
+// ..
 
     /**
      * Proxy Calls To Worker
