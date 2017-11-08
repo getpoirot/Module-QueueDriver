@@ -4,8 +4,12 @@ namespace Module\QueueDriver\Actions\Worker;
 use Poirot\Queue\Queue\AggregateQueue;
 
 
+// TODO Improve worker registry
 class Worker
 {
+    /** @var array */
+    protected static $workers = [];
+
     /** @var \Poirot\Queue\Worker */
     protected $worker;
     /** @var AggregateQueue */
@@ -14,6 +18,10 @@ class Worker
 
     function __invoke($worker_name)
     {
+        if (isset(static::$workers[$worker_name]))
+            return static::$workers[$worker_name];
+
+
         // TODO third argument will not pass to action
         // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
         $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
@@ -64,6 +72,7 @@ class Worker
 
         ]);
 
+
         $n = clone $this;
         $n->queue  = $qAggregate;
         $n->worker = new \Poirot\Queue\Worker(
@@ -72,6 +81,7 @@ class Worker
             , $settings
         );
 
+        static::$workers[$worker_name] = $n;
         return $n;
     }
 
