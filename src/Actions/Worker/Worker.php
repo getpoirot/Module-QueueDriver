@@ -1,4 +1,5 @@
 <?php
+
 namespace Module\QueueDriver\Actions\Worker;
 
 use Poirot\Queue\Queue\AggregateQueue;
@@ -24,9 +25,10 @@ class Worker
 
         // TODO third argument will not pass to action
         // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
+
         $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
         $conf = $conf['workers'];
-        if (! isset($conf[$worker_name]) )
+        if (!isset($conf[$worker_name]))
             throw new \Exception(sprintf(
                 'Worker With name (%s) not found.'
                 , $worker_name
@@ -41,11 +43,11 @@ class Worker
 
         /*
         'channels' => [
-            'general' => [
-                // Jobs in this queue will executed with DemonShutdown
-                'queue_name' => 'memory', // Queue defined in Service Container
-                'weight'     => 10,
-            ],
+        'general' => [
+        // Jobs in this queue will executed with DemonShutdown
+        'queue_name' => 'memory', // Queue defined in Service Container
+        'weight'     => 10,
+        ],
         ],
         */
         foreach ($conf['channels'] as $cname => $cvalue) {
@@ -53,14 +55,14 @@ class Worker
             $qAggregate->addQueue(
                 $cname
                 , $queue
-                , ( isset($cvalue['weight']) ) ? $cvalue['weight'] : null
+                , (isset($cvalue['weight'])) ? $cvalue['weight'] : null
             );
         }
 
 
         # Attain Built-in Queue Services
         #
-        if ( isset($conf['aggregate']) && is_array($conf['aggregate']) && isset($conf['aggregate']['built_in_queue']) ) {
+        if (isset($conf['aggregate']) && is_array($conf['aggregate']) && isset($conf['aggregate']['built_in_queue'])) {
             if (is_string($conf['aggregate']['built_in_queue']))
                 // Retrieve Queue From Services
                 $conf['aggregate']['built_in_queue'] = \Module\QueueDriver\Services::Queues()->get($conf['aggregate']['built_in_queue']);
@@ -74,7 +76,7 @@ class Worker
 
 
         $n = clone $this;
-        $n->queue  = $qAggregate;
+        $n->queue = $qAggregate;
         $n->worker = new \Poirot\Queue\Worker(
             $worker_name
             , $qAggregate
