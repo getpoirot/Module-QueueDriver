@@ -4,7 +4,6 @@ namespace Module\QueueDriver\Actions\Worker;
 
 use Poirot\Events\Event\BuildEvent;
 use Poirot\Queue\Queue\AggregateQueue;
-use Poirot\Queue\Worker\EventHeapOfWorker;
 
 
 // TODO Improve worker registry
@@ -29,6 +28,12 @@ class Worker
         // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
 
         $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
+
+        if ( isset($conf['events']) ) {
+            $defEvents = $conf['events'];
+        }
+
+
         $conf = $conf['workers'];
         if (!isset($conf[$worker_name]))
             throw new \Exception(sprintf(
@@ -37,7 +42,9 @@ class Worker
             ));
 
 
+
         $conf = $conf[$worker_name];
+
 
         # Build Queue Aggregate
         #
@@ -57,7 +64,7 @@ class Worker
             $qAggregate->addQueue(
                 $cname
                 , $queue
-                , (isset($cvalue['weight'])) ? $cvalue['weight'] : null
+                , ( isset($cvalue['weight']) ) ? $cvalue['weight'] : null
             );
         }
 
@@ -85,9 +92,9 @@ class Worker
             , $settings
         );
 
-        if(\array_key_exists('events', $conf)) {
+        if ( \array_key_exists('events', $conf) ) {
             $events = $n->worker->event();
-            $builds = new BuildEvent([ 'events' => $conf['events'] ]);
+            $builds = new BuildEvent([ 'events' => $conf['events'] + $defEvents ]);
             $builds->build($events);
         }
 
