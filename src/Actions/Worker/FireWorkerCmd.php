@@ -1,18 +1,26 @@
 <?php
 namespace Module\QueueDriver\Actions\Worker;
 
-use Module\Foundation\Actions\aAction;
+use Module\CliFoundation\Interfaces\iCommand;
 use Poirot\Queue\Worker;
+use Module\Foundation\Actions\aAction;
 
 
-class FireWorkerAction
+class FireWorkerCmd
     extends aAction
 {
     protected $worker;
 
 
-    function __invoke($worker_name = null)
+    /**
+     * @param iCommand $command
+     */
+    function __invoke($command = null)
     {
+        $worker_name = $command->getArg(0);
+        $worker_name = $worker_name->getValue();
+
+
         $worker       = \Module\QueueDriver\Actions::Worker($worker_name);
         $this->worker = $worker;
 
@@ -58,19 +66,10 @@ class FireWorkerAction
      */
     private function _sendHeaders()
     {
-        header("Content-Type: text/plain");
-        header("Connection: close");
-
-        ob_start();
         echo 'Demon Start, Process #'.getmypid();
-        $size = ob_get_length();
-        header("Content-Length: $size");
-        ob_end_flush(); // Strange behaviour, will not work
-        flush();
 
         // Script Running So Long!
         ignore_user_abort(true);
-        session_write_close();
     }
 
     private function _run(\Module\QueueDriver\Actions\Worker\Worker $worker)
@@ -125,8 +124,9 @@ class FireWorkerAction
 
         $allowedThreads = \Module\Foundation\Actions::config(
             \Module\QueueDriver\Module::CONF
-            , 'worker', 'workers', $workerName, 'max_trades'
         );
+
+        $allowedThreads = $allowedThreads['worker']['workers'][$workerName]['max_trades'];
 
         if ($allowedThreads === null)
             return true;
