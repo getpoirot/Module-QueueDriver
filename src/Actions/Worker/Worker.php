@@ -2,7 +2,9 @@
 
 namespace Module\QueueDriver\Actions\Worker;
 
+use Poirot\Events\Event\BuildEvent;
 use Poirot\Queue\Queue\AggregateQueue;
+use Poirot\Queue\Worker\EventHeapOfWorker;
 
 
 class Worker
@@ -80,6 +82,12 @@ class Worker
             , $qAggregate
             , $settings
         );
+
+        if(\array_key_exists('events', $conf)) {
+            $events = $n->worker->event();
+            $builds = new BuildEvent([ 'events' => $conf['events'] ]);
+            $builds->build($events);
+        }
 
         static::$workers[$worker_name] = $n;
         return $n;
