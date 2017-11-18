@@ -9,9 +9,6 @@ namespace Module\QueueDriver
     use Poirot\Ioc\Container;
     use Poirot\Ioc\Container\BuildContainer;
 
-    use Poirot\Router\BuildRouterStack;
-    use Poirot\Router\Interfaces\iRouterStack;
-
     use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 
@@ -36,7 +33,6 @@ namespace Module\QueueDriver
         , Sapi\Module\Feature\iFeatureModuleInitModuleManager
         , Sapi\Module\Feature\iFeatureModuleNestActions
         , Sapi\Module\Feature\iFeatureModuleNestServices
-        , Sapi\Module\Feature\iFeatureOnPostLoadModulesGrabServices
     {
         const CONF  = 'mod.queue_driver';
         const REALM_FEDERATION = 'mod.queue_driver.realm';
@@ -110,30 +106,6 @@ namespace Module\QueueDriver
         function getActions()
         {
             return \Poirot\Config\load(__DIR__ . '/../config/mod-queue_driver_actions');
-        }
-
-        /**
-         * Resolve to service with name
-         *
-         * - each argument represent requested service by registered name
-         *   if service not available default argument value remains
-         * - "services" as argument will retrieve services container itself.
-         *
-         * ! after all modules loaded
-         *
-         * @param iRouterStack $router
-         *
-         * @internal param null $services service names must have default value
-         */
-        function resolveRegisteredServices($router = null)
-        {
-            # Register Http Routes:
-            if ($router) {
-                $routes = include __DIR__ . '/../config/mod-queue_driver_routes.conf.php';
-                $buildRoute = new BuildRouterStack();
-                $buildRoute->setRoutes($routes);
-                $buildRoute->build($router);
-            }
         }
     }
 }

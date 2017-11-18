@@ -7,6 +7,7 @@ use Poirot\Queue\Queue\AggregateQueue;
 use Poirot\Queue\Worker\EventHeapOfWorker;
 
 
+// TODO Improve worker registry
 class Worker
 {
     /** @var array */
@@ -24,8 +25,9 @@ class Worker
             return static::$workers[$worker_name];
 
 
-// TODO third argument will not pass to action
-// $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
+        // TODO third argument will not pass to action
+        // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
+
         $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
         $conf = $conf['workers'];
         if (!isset($conf[$worker_name]))
@@ -37,8 +39,8 @@ class Worker
 
         $conf = $conf[$worker_name];
 
-# Build Queue Aggregate
-#
+        # Build Queue Aggregate
+        #
         $qAggregate = new AggregateQueue;
 
         /*
@@ -60,11 +62,11 @@ class Worker
         }
 
 
-# Attain Built-in Queue Services
-#
+        # Attain Built-in Queue Services
+        #
         if (isset($conf['aggregate']) && is_array($conf['aggregate']) && isset($conf['aggregate']['built_in_queue'])) {
             if (is_string($conf['aggregate']['built_in_queue']))
-// Retrieve Queue From Services
+                // Retrieve Queue From Services
                 $conf['aggregate']['built_in_queue'] = \Module\QueueDriver\Services::Queues()->get($conf['aggregate']['built_in_queue']);
         }
 
@@ -122,7 +124,7 @@ class Worker
     }
 
 
-// ..
+    // ..
 
     /**
      * Proxy Calls To Worker
