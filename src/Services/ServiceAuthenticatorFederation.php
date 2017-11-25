@@ -30,6 +30,7 @@ class ServiceAuthenticatorFederation
         $realm      = aIdentifier::DEFAULT_REALM;
 
         $adapter    = new IdentityCredentialDigestFile;
+        $adapter->setPwdFilePath('/to/nowhere'); // currently disable this; work with cli
 
         // Affect Application Request/Response
         $request    = \IOC::GetIoC()->get('/HttpRequest');
