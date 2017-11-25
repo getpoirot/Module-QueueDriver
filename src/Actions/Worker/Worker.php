@@ -92,9 +92,16 @@ class Worker
             , $settings
         );
 
+
+        if ( isset($defEvents) ) {
+            $events = $n->worker->event();
+            $builds = new BuildEvent([ 'events' => $defEvents ]);
+            $builds->build($events);
+        }
+
         if ( \array_key_exists('events', $conf) ) {
             $events = $n->worker->event();
-            $builds = new BuildEvent([ 'events' => $conf['events'] + $defEvents ]);
+            $builds = new BuildEvent([ 'events' => $conf['events'] ]);
             $builds->build($events);
         }
 

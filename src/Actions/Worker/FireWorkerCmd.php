@@ -15,10 +15,12 @@ class FireWorkerCmd
     /**
      * @param iCommand $command
      */
-    function __invoke($command = null)
+    function __invoke($command = null, $worker_name = null)
     {
-        $worker_name = $command->getArg(0);
-        $worker_name = $worker_name->getValue();
+        if ($command) {
+            $worker_name = $command->getArg(0);
+            $worker_name = $worker_name->getValue();
+        }
 
 
         $worker       = \Module\QueueDriver\Actions::Worker($worker_name);
