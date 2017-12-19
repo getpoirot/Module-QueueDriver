@@ -5,6 +5,7 @@ use Module\QueueDriver\Services\ServiceAuthenticatorFederation;
 use Module\QueueDriver\Services\ServiceAuthGuard;
 use Module\QueueDriver\Services\ServiceQueuesContainer;
 use Module\QueueDriver\Services\ServiceStorage;
+use Poirot\Queue\Worker\EventHeapOfWorker;
 
 return [
     \Module\QueueDriver\Module::CONF => [
@@ -24,7 +25,38 @@ return [
                     'aggregate' => [
                         // Worker Settings
                         'built_in_queue' => 'mongodb',
+                    ],
 
+                    'events' => [
+                        /*
+                        EventHeapOfWorker::EVENT_PAYLOAD_FAILURE => [
+                            'listeners' => [
+                                [
+                                    'listener' => new \Poirot\Ioc\instance(
+                                        \Module\Apanaj\Events\Listener\OnWorkerFailureLoggException::class
+                                        , [
+                                            'logger' => new \Poirot\Ioc\instance('/module/apanaj/services/logger')
+                                        ]
+                                    ),
+
+                                    'priority' => -100,
+                                ]
+
+                            ]
+                        ],
+                        */
+                        /*
+                        EventHeapOfWorker::EVENT_PAYLOAD_SUCCEED => [
+                            'listeners' => [
+                                new \Poirot\Ioc\instance(
+                                    \Module\Apanaj\Events\Listener\OnWorkerPayloadReceivedLogg::class
+                                    , [
+                                        'logger' => new \Poirot\Ioc\instance('/module/apanaj/services/logger')
+                                    ]
+                                )
+                            ],
+                        ],
+                        */
                     ],
                 ],
             ],
