@@ -1,6 +1,8 @@
 <?php
 use Module\Authorization\Services\ServiceAuthenticatorsContainer;
 use Module\Authorization\Services\ServiceGuardsContainer;
+use Module\CliFoundation\Services\ServiceConsoleRouter;
+use Module\QueueDriver\Actions\Worker\FireWorkerCmd;
 use Module\QueueDriver\Services\ServiceAuthenticatorFederation;
 use Module\QueueDriver\Services\ServiceAuthGuard;
 use Module\QueueDriver\Services\ServiceQueuesContainer;
@@ -111,6 +113,15 @@ return [
                     'queue_federation' => ServiceAuthGuard::class,
                 ],
             ],
+        ],
+    ],
+
+
+    ## CMD Commands
+    #
+    ServiceConsoleRouter::CONF => [
+        'workers' => [
+            'action' => FireWorkerCmd::class,
         ],
     ],
 
