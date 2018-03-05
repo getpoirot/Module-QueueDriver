@@ -116,4 +116,13 @@ return [
         ],
     ],
 
+
+    ## CMD Commands
+    #
+    ServiceConsoleRouter::CONF => [
+        'workers' => [
+            'action' => FireWorkerCmd::class,
+        ],
+    ],
+
 ];
