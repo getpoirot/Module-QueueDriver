@@ -10,9 +10,14 @@
         }
     ]
     , "require": {
+<<<<<<< HEAD
         "poirot/skeleton": "dev-devel"
         ,"poirot/queue": "dev-devel"
         ,"poirot/mod-authorization": "dev-devel"
+=======
+        "poirot/skeleton": "dev-master"
+        ,"poirot/queue": "dev-master"
+>>>>>>> d9302aa98c4a2d3bed818beee6a9f761f9bec727
     }
    ,"autoload"  : {
         "psr-4": {
