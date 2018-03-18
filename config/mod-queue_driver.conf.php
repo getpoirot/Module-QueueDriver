@@ -1,13 +1,8 @@
 <?php
-use Module\Authorization\Services\ServiceAuthenticatorsContainer;
-use Module\Authorization\Services\ServiceGuardsContainer;
 use Module\CliFoundation\Services\ServiceConsoleRouter;
 use Module\QueueDriver\Actions\Worker\FireWorkerCmd;
-use Module\QueueDriver\Services\ServiceAuthenticatorFederation;
-use Module\QueueDriver\Services\ServiceAuthGuard;
 use Module\QueueDriver\Services\ServiceQueuesContainer;
 use Module\QueueDriver\Services\ServiceStorage;
-use Poirot\Queue\Worker\EventHeapOfWorker;
 
 return [
     \Module\QueueDriver\Module::CONF => [
@@ -90,29 +85,6 @@ return [
 //                \Module\QueueDriver\Services\Storage\ServiceStorageRedis::class,
 //                [ 'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null ]
 //            ),
-        ],
-    ],
-
-
-    ## Authenticator:
-    #
-    \Module\Authorization\Module::CONF => [
-
-        ServiceAuthenticatorsContainer::CONF => [
-            'plugins_container' => [
-                'services' => [
-                    // Authenticators Services
-                    \Module\QueueDriver\Module::REALM_FEDERATION => ServiceAuthenticatorFederation::class,
-                ],
-            ],
-        ],
-
-        ServiceGuardsContainer::CONF => [
-            'plugins_container' => [
-                'services' => [
-                    'queue_federation' => ServiceAuthGuard::class,
-                ],
-            ],
         ],
     ],
 
