@@ -24,9 +24,6 @@ class Worker
             return static::$workers[$worker_name];
 
 
-        // TODO third argument will not pass to action
-        // $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker', 'workers');
-
         $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
 
         if ( isset($conf['events']) ) {

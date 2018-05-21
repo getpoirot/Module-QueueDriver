@@ -1,6 +1,8 @@
 <?php
 namespace Module\QueueDriver
 {
+
+    use Module\QueueDriver\Actions\Worker\Worker;
     use Poirot\Application\Interfaces\Sapi\iSapiModule;
     use Poirot\Application\Interfaces\Sapi;
     use Poirot\Application\ModuleManager\Interfaces\iModuleManager;
@@ -19,15 +21,25 @@ namespace Module\QueueDriver
      *   > Queues
      *     define some queue plugins can accessed by name;
      *
-     *     Module\QueueDriver::Queues()->get('memory')
+     *     Module\QueueDriver\Services::Queues()->get('memory')
      *
      *   > Storage
      *     storage used by aggregate queue to pick tasks and store some
      *     information about trades and etc.
      *
+     *
      * Actions:
      *   > Worker
      *
+     *    [code]
+     *      $worker = \Module\QueueDriver\Actions::Worker('default_worker');
+     *      $worker->queue()->push(new BasePayload([
+     *        'command' => UploadPostLargeFile::COMMAND,
+     *        'param1'  => 'value1',
+     *      ]));
+     *    [/code]
+     *
+     *    @see Worker
      *
      */
     class Module implements iSapiModule
@@ -140,7 +152,6 @@ namespace Module\QueueDriver
 
 namespace Module\QueueDriver
 {
-    use Module\QueueDriver\Actions\Worker\Worker;
     use Module\QueueDriver\Services\ContainerQueuesCapped;
     use Poirot\Storage\Interfaces\iDataStore;
 

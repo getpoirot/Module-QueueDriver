@@ -7,7 +7,6 @@ use Module\QueueDriver\Services\ServiceAuthenticatorFederation;
 use Module\QueueDriver\Services\ServiceAuthGuard;
 use Module\QueueDriver\Services\ServiceQueuesContainer;
 use Module\QueueDriver\Services\ServiceStorage;
-use Poirot\Queue\Worker\EventHeapOfWorker;
 
 return [
     \Module\QueueDriver\Module::CONF => [
@@ -69,27 +68,61 @@ return [
             // It's a configuration of BuilderContainer [services=>]
             // @see BuildContainer::setServices
             'memory'  => new \Poirot\Queue\Queue\InMemoryQueue(),
+
+            /* MongoDB
             'mongodb' => [
                 \Module\QueueDriver\Services\Queue\ServiceQueueMongodb::class,
                 'db' => 'mydb', 'client' => 'master', 'collection' => 'queue.app',
             ],
-//            'redis'   => [
-//                \Module\QueueDriver\Services\Queue\ServiceQueueRedis::class,
-//                'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null
-//            ]
+            */
 
+            /* Redis
+            'redis' => [
+                \Module\QueueDriver\Services\Queue\ServiceQueueRedis::class,
+                'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null
+            ]
+            */
+
+            /* Pdo/mySql
+            'pdo' => [
+                \Module\QueueDriver\Services\Queue\QueuePdoService::class,
+                'dsn' => 'mysql:host=localhost;dbname=test',
+                'user' => 'root', 'password' => '***',
+                'pdo_options' => [
+                   PDO::ATTR_PERSISTENT = true,
+                   PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'",
+                ],
+                'on_init' => function(\PDO $conn) {
+                    // set the PDO error mode to exception
+                    $conn->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
+                    $conn->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET CHARACTER SET 'utf8'");
+                    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $conn->exec("SET NAMES utf8");
+                },
+            ]
+            */
         ],
 
         // Storage Used By Worker(s) while running jobs ....
         ServiceStorage::CONF => [
+
+            /* MongoDb
             'instance' => new \Poirot\Ioc\instance(
                 \Module\QueueDriver\Services\Storage\ServiceStorageMongodb::class,
                 [ 'db' => 'mydb', 'client' => 'master', 'collection' => 'queue.app.storage', ]
             ),
-//            'instance' => new \Poirot\Ioc\instance(
-//                \Module\QueueDriver\Services\Storage\ServiceStorageRedis::class,
-//                [ 'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null ]
-//            ),
+            */
+
+            /* Redis
+            'instance' => new \Poirot\Ioc\instance(
+                \Module\QueueDriver\Services\Storage\ServiceStorageRedis::class,
+                [ 'scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => '6379', 'password'  => null ]
+            ),
+            */
+
+            /*
+
+            */
         ],
     ],
 

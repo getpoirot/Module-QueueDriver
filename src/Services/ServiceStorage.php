@@ -10,7 +10,7 @@ use Poirot\Storage\Interfaces\iDataStore;
 class ServiceStorage
     extends aServiceContainer
 {
-    const CONF='storage';
+    const CONF = 'storage';
 
 
     /**
@@ -44,11 +44,9 @@ class ServiceStorage
         $config = $services->get('/sapi');
         $config = $config->config();
         /** @var DataEntity $config */
-        $config = $config->get( \Module\QueueDriver\Module::CONF, array() );
-
-
-
+        $config = $config->get(\Module\QueueDriver\Module::CONF, []);
         $config = $config[self::CONF];
+
         return $config;
     }
 }

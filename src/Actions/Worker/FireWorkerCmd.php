@@ -6,6 +6,10 @@ use Poirot\Queue\Worker;
 use Module\Foundation\Actions\aAction;
 
 
+/**
+ * > ./poirot workers default_worker &
+ *
+ */
 class FireWorkerCmd
     extends aAction
 {
