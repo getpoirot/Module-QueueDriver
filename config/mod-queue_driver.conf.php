@@ -100,7 +100,10 @@ return [
         ],
 
         // Storage Used By Worker(s) while running jobs ....
+        /** @see FireWorkerCmd */
         ServiceStorage::CONF => [
+
+            'instance' => new \Poirot\Storage\InMemoryStore('queue_store'),
 
             /* MongoDb
             'instance' => new \Poirot\Ioc\instance(
@@ -116,8 +119,24 @@ return [
             ),
             */
 
-            /*
-
+            /* Pdo
+            'instance' => new \Poirot\Ioc\instance(
+                \Module\QueueDriver\Services\Queue\StoragePdoService::class
+                , [
+                'dsn' => 'mysql:host=digifilm_db-admin-mariadb;dbname=digifilm_admin',
+                'user' => 'pooyapp_root', 'password' => '5hmg3vkrxgsd2swu',
+                'pdo_options' => [
+                    PDO::ATTR_PERSISTENT => true,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'",
+                ],
+                'on_init' => function(\PDO $conn) {
+                    // set the PDO error mode to exception
+                    $conn->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES 'utf8'");
+                    $conn->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET CHARACTER SET 'utf8'");
+                    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $conn->exec("SET NAMES utf8");
+                },
+            ])
             */
         ],
     ],

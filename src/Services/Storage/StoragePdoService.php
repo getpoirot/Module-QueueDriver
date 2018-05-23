@@ -1,11 +1,11 @@
 <?php
 namespace Module\QueueDriver\Services\Queue;
 
+use Poirot\Storage\PdoStore;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\Queue\Queue\PdoQueue;
 
 
-class QueuePdoService
+class StoragePdoService
     extends aServiceContainer
 {
     /**
@@ -47,7 +47,7 @@ class QueuePdoService
 
         ## Create Queue Service
         #
-        $queue = new PdoQueue($conn);
+        $queue = new PdoStore($conn);
         return $queue;
     }
 

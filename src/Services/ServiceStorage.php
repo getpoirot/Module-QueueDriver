@@ -20,6 +20,8 @@ class ServiceStorage
      */
     function newService()
     {
+        // TODO better instantiate Object
+
         $conf = $this->_getConf();
         $storage = $conf['instance'];
 
