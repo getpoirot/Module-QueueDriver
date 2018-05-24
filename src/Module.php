@@ -1,8 +1,6 @@
 <?php
 namespace Module\QueueDriver
 {
-
-    use Module\QueueDriver\Actions\Worker\Worker;
     use Poirot\Application\Interfaces\Sapi\iSapiModule;
     use Poirot\Application\Interfaces\Sapi;
     use Poirot\Application\ModuleManager\Interfaces\iModuleManager;
@@ -11,8 +9,6 @@ namespace Module\QueueDriver
     use Poirot\Ioc\Container;
     use Poirot\Ioc\Container\BuildContainer;
 
-    use Poirot\Router\BuildRouterStack;
-    use Poirot\Router\Interfaces\iRouterStack;
     use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 
@@ -128,8 +124,9 @@ namespace Module\QueueDriver
 
 namespace Module\QueueDriver
 {
-    use Module\QueueDriver\Services\ContainerQueuesCapped;
     use Poirot\Storage\Interfaces\iDataStore;
+    use Module\QueueDriver\Actions\Worker\Worker;
+    use Module\QueueDriver\Services\ContainerQueuesCapped;
 
 
     /**
