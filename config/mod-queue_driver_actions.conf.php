@@ -4,6 +4,6 @@
 return [
     'services' => [
         /** Access Registered Workers */
-        'Worker'           => \Module\QueueDriver\Actions\Worker\Worker::class,
+        'Worker' => \Module\QueueDriver\Actions\Worker\WorkerAction::class,
     ],
 ];

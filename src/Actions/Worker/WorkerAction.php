@@ -7,8 +7,10 @@ use Poirot\Queue\Queue\AggregateQueue;
 
 
 // TODO Improve worker registry
-class Worker
+class WorkerAction
 {
+    const CONF = 'worker';
+
     /** @var array */
     protected static $workers = [];
 
@@ -20,25 +22,26 @@ class Worker
 
     function __invoke($worker_name)
     {
-        if (isset(static::$workers[$worker_name]))
+        if ( isset(static::$workers[$worker_name]) )
             return static::$workers[$worker_name];
 
 
-        $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, 'worker');
+        $conf = \Module\Foundation\Actions::config(\Module\QueueDriver\Module::CONF, self::CONF);
 
-        if ( isset($conf['events']) ) {
+
+        ## Global Worker Events Setting
+        #
+        if ( isset($conf['events']) )
             $defEvents = $conf['events'];
-        }
 
-
+        ## Worker Settings
+        #
         $conf = $conf['workers'];
-        if (!isset($conf[$worker_name]))
+        if (! isset($conf[$worker_name]) )
             throw new \Exception(sprintf(
                 'Worker With name (%s) not found.'
                 , $worker_name
             ));
-
-
 
         $conf = $conf[$worker_name];
 
@@ -49,11 +52,11 @@ class Worker
 
         /*
         'channels' => [
-        'general' => [
-        // Jobs in this queue will executed with DemonShutdown
-        'queue_name' => 'memory', // Queue defined in Service Container
-        'weight'     => 10,
-        ],
+          'general' => [
+            // Jobs in this queue will executed with DemonShutdown
+            'queue_name' => 'memory', // Queue defined in Service Container
+            'weight'     => 10,
+           ],
         ],
         */
         foreach ($conf['channels'] as $cname => $cvalue) {
@@ -68,14 +71,16 @@ class Worker
 
         # Attain Built-in Queue Services
         #
-        if (isset($conf['aggregate']) && is_array($conf['aggregate']) && isset($conf['aggregate']['built_in_queue'])) {
-            if (is_string($conf['aggregate']['built_in_queue']))
+        if (   isset($conf['settings']) && is_array( $conf['settings'] )
+            && isset($conf['settings']['built_in_queue'])
+        ) {
+            if ( is_string($conf['settings']['built_in_queue']) )
                 // Retrieve Queue From Services
-                $conf['aggregate']['built_in_queue'] = \Module\QueueDriver\Services::Queues()->get($conf['aggregate']['built_in_queue']);
+                $conf['settings']['built_in_queue'] = \Module\QueueDriver\Services::Queues()->get($conf['settings']['built_in_queue']);
         }
 
 
-        $settings = (isset($conf['aggregate'])) ? $conf['aggregate'] : [];
+        $settings = (isset($conf['settings'])) ? $conf['settings'] : [];
         $settings = array_merge($settings, [
 
         ]);

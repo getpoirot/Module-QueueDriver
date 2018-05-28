@@ -125,7 +125,7 @@ namespace Module\QueueDriver
 namespace Module\QueueDriver
 {
     use Poirot\Storage\Interfaces\iDataStore;
-    use Module\QueueDriver\Actions\Worker\Worker;
+    use Module\QueueDriver\Actions\Worker\WorkerAction;
     use Module\QueueDriver\Services\ContainerQueuesCapped;
 
 
@@ -138,7 +138,7 @@ namespace Module\QueueDriver
 
 
     /**
-     * @method static Worker Worker($worker_name)
+     * @method static WorkerAction Worker($worker_name)
      */
     class Actions extends \IOC
     { }

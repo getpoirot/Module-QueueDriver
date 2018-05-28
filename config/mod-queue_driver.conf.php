@@ -1,13 +1,18 @@
 <?php
 use Module\CliFoundation\Services\ServiceConsoleRouter;
 use Module\QueueDriver\Actions\Worker\FireWorkerCmd;
+use Module\QueueDriver\Actions\Worker\WorkerAction;
 use Module\QueueDriver\Services\ServiceQueuesContainer;
 use Module\QueueDriver\Services\ServiceStorage;
 
 return [
     \Module\QueueDriver\Module::CONF => [
 
-        'worker' => [
+        WorkerAction::CONF => [
+
+            'events' => [
+
+            ],
 
             'workers' => [
                 'default_worker' => [
@@ -19,7 +24,7 @@ return [
                             'weight'     => 10,
                         ],
                     ],
-                    'aggregate' => [
+                    'settings' => [
                         // Worker Settings
                         'built_in_queue' => 'mongodb',
                     ],

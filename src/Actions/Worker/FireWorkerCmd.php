@@ -2,8 +2,6 @@
 namespace Module\QueueDriver\Actions\Worker;
 
 use Module\CliFoundation\Interfaces\iCommand;
-use Poirot\Queue\Worker;
-use Module\Foundation\Actions\aAction;
 
 
 /**
@@ -11,7 +9,6 @@ use Module\Foundation\Actions\aAction;
  *
  */
 class FireWorkerCmd
-    extends aAction
 {
     protected $worker;
 
@@ -78,7 +75,7 @@ class FireWorkerCmd
         ignore_user_abort(true);
     }
 
-    private function _run(\Module\QueueDriver\Actions\Worker\Worker $worker)
+    private function _run(\Module\QueueDriver\Actions\Worker\WorkerAction $worker)
     {
         $worker->goWait();
     }
@@ -86,7 +83,7 @@ class FireWorkerCmd
 
     private function _refreshKilledPids($worker)
     {
-        /** @var Worker $worker */
+        /** @var WorkerAction $worker */
 
         $storage    = \Module\QueueDriver\Services::Storage();
         $data       = $storage->get($worker->getWorkerName(), []);
@@ -103,7 +100,7 @@ class FireWorkerCmd
 
     private function _keepTrack($worker)
     {
-        /** @var Worker $worker */
+        /** @var WorkerAction $worker */
 
         $workerName = $worker->getWorkerName();
         $workerID   = $worker->getWorkerID();
@@ -124,7 +121,7 @@ class FireWorkerCmd
 
     private function _isAllowedByMaxThreads($worker)
     {
-        /** @var Worker $worker */
+        /** @var WorkerAction $worker */
 
         $workerName = $worker->getWorkerName();
 
@@ -148,7 +145,7 @@ class FireWorkerCmd
 
     function __destruct()
     {
-        /** @var Worker $worker */
+        /** @var WorkerAction $worker */
         if ( null === $worker = $this->worker )
             return;
 
