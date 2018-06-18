@@ -1,6 +1,7 @@
 <?php
 use Module\CliFoundation\Services\ServiceConsoleRouter;
 use Module\QueueDriver\Actions\Worker\FireWorkerCmd;
+use Module\QueueDriver\Actions\Worker\WorkerDaemonCmd;
 use Module\QueueDriver\Actions\Worker\WorkerAction;
 use Module\QueueDriver\Services\ServiceQueuesContainer;
 use Module\QueueDriver\Services\ServiceStorage;
@@ -152,6 +153,9 @@ return [
     ServiceConsoleRouter::CONF => [
         'workers' => [
             'action' => FireWorkerCmd::class,
+        ],
+        'daemon' => [
+            'action' => WorkerDaemonCmd::class,
         ],
     ],
 

@@ -14,6 +14,21 @@ class FireWorkerCmd
 
 
     /**
+     * FireWorkerCmd constructor.
+     *
+     * @throws \Exception
+     */
+    function __construct()
+    {
+        if (! \Poirot\isCommandLine() )
+            throw new \Exception('Worker May Executed On CLI Sapi.');
+
+
+        ini_set('display_errors', 0);
+    }
+
+
+    /**
      * @param iCommand $command
      */
     function __invoke($command = null, $worker_name = null)
