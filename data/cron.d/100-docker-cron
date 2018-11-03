@@ -1,1 +1,1 @@
-* * * * * root curl -u admin:123456 -H "Accept: application/json" -X GET http://127.0.0.1/q-wrk/demon/fire/default_worker
+* * * * *   (cd /var/www/html && ./poirot workers default_worker &)
